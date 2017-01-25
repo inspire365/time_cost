@@ -5,7 +5,7 @@
 #include <inttypes.h>
 #include <sys/time.h>
 
-namespace wh { namespace server {
+namespace common { namespace server {
 
 /*! \class CostTime
     \brief A wrapper to get cost time
@@ -63,7 +63,7 @@ private:
 
 
 /*! \class CostTimeCg
-    \brief A wrapper to get cost time which is implemented with clock_gettime
+    \brief A wrapper to get cost time commonich is implemented with clock_gettime
  *
  *  similar to CostTime, but less effective
  */
@@ -107,7 +107,7 @@ private:
 }; // CostTimeCg
 
 /*! \class CostTimeGtd
-    \brief A wrapper to get cost time which is implemented with gettimeofday
+    \brief A wrapper to get cost time commonich is implemented with gettimeofday
  *
  *  similar to CostTime, but less effective, the system time can affect the result
  *  In according to my profile with 1kw call, CostTimeCg is 10ms fast than CostTimeGtd
@@ -148,7 +148,7 @@ private:
 
 }; // CostTimeGtd
 
-}} // ::wh::server
+}} // ::common::server
 
 #endif // __COST_TIME_H_
 

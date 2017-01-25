@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-namespace wh { namespace server {
+namespace common { namespace server {
 
 #define rdtsc(low,high) __asm__ \
  __volatile__("rdtsc" : "=a" (low), "=d" (high))
@@ -55,5 +55,5 @@ unsigned long long CostTime::GetCycles()
   return val;
 }
 
-}} // ::wh::server
+}} // ::common::server
 

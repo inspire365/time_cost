@@ -8,7 +8,7 @@
 #include "cost.h"
 
 using namespace std;
-using namespace ::wh::server;
+using namespace ::common::server;
 
 int main(int argc, char** argv)
 {
