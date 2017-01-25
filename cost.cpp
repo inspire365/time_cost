@@ -5,6 +5,8 @@
 
 namespace wh { namespace server {
 
+#define rdtsc(low,high) __asm__ \
+ __volatile__("rdtsc" : "=a" (low), "=d" (high))
 
 double CostTime::cpu_freq_ = 0;
 

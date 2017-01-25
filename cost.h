@@ -5,15 +5,23 @@
 #include <inttypes.h>
 #include <sys/time.h>
 
-#define rdtsc(low,high) __asm__ \
- __volatile__("rdtsc" : "=a" (low), "=d" (high))
-
 namespace wh { namespace server {
 
+/*! \class CostTime
+    \brief A wrapper to get cost time
+ *
+ *  CostTime is implemented with x86 Instruction
+ *  It's more effective than the below
+ *  CostTimeGtd and CostTimeCg
+ */
 class CostTime
 {
 public:
 
+  /**
+   * CostTime Constructor
+   * @param cost  return the time consume between the constructor and destructor, in millisecond
+   */
   CostTime(uint32_t& cost)
     : start_(0)
     , stop_(0)
@@ -28,9 +36,18 @@ public:
     cost_ = (stop_ - start_) / cpu_freq_;
   }
 
-  // make sure to call this function to init cpu_freq first
+  /**
+   * Init the CPU freq variable
+   * make sure to call GetCPUFreq
+   * before using this class
+   */
   static bool GetCPUFreq();
 
+  /**
+   * call rdtsc to get Time-Stamp Counter
+   * ref: https://www.ccsl.carleton.ca/~jamuir/rdtscpm1.pdf
+   * @return CPU cycle
+   */
   static unsigned long long GetCycles();
 
 private:
@@ -44,13 +61,27 @@ private:
 
 }; // CostTime
 
+
+/*! \class CostTimeCg
+    \brief A wrapper to get cost time which is implemented with clock_gettime
+ *
+ *  similar to CostTime, but less effective
+ */
 class CostTimeCg
 {
 public:
 
+  /**
+   * CostTime Constructor
+   * @param cost  return the time consume between the constructor and destructor, in millisecond
+   */
   CostTimeCg(uint32_t& cost)
     : cost_(cost)
   {
+    // NOTE: CLOCK_MONOTONIC is more effective than CLOCK_PROCESS_CPUTIME_ID and CLOCK_THREAD_CPUTIME_ID
+    // CLOCK_REALTIME is almost as effective as CLOCK_MONOTONIC, but CLOCK_REALTIME represents the
+    // machine's best-guess as to the current wall-clock, it can jump forwards and backwards as the system
+    // time-of-day clock is changed, including by NTP.
     clock_gettime(CLOCK_MONOTONIC, &start_);
   }
 
@@ -73,12 +104,23 @@ private:
   timespec  start_;
   timespec  stop_;
 
-}; // CostTimeGtd
+}; // CostTimeCg
 
+/*! \class CostTimeGtd
+    \brief A wrapper to get cost time which is implemented with gettimeofday
+ *
+ *  similar to CostTime, but less effective, the system time can affect the result
+ *  In according to my profile with 1kw call, CostTimeCg is 10ms fast than CostTimeGtd
+ *  CostTimeCg takes 235ms in my Intel I5 PC, ubuntu 13.04
+ */
 class CostTimeGtd
 {
 public:
 
+  /**
+   * CostTime Constructor
+   * @param cost  return the time consume between the constructor and destructor, in millisecond
+   */
   CostTimeGtd(uint32_t& cost)
     : cost_(cost)
   {
@@ -87,7 +129,6 @@ public:
 
   ~CostTimeGtd()
   {
-    uint32_t cost_time = 0;
     gettimeofday(&stop_, NULL);
     if (start_.tv_usec > stop_.tv_usec)
     {
