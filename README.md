@@ -8,3 +8,6 @@ According to main.cpp comparision:
 - CostTimeCg implemented with [clock_gettime](https://linux.die.net/man/3/clock_gettime) and CLOCK_MONOTONIC parameter. With 1KW call, it takes about 230ms in my PC.
 - CostTimeGtd implemented with [gettimeofday](https://linux.die.net/man/2/gettimeofday), it can be affected by the system time. With 1KW call, it takes about 240ms in my PC.
 
+
+
+###### Anyway, CostTime implemented with rdtsc is a better choice than the other two
