@@ -10,4 +10,4 @@ According to main.cpp comparision:
 
 
 
-** Anyway, CostTime implemented with rdtsc is a better choice than the other two **
+**Anyway, CostTime implemented with rdtsc is a better choice than the other two**
